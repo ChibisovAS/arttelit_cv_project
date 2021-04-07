@@ -1,9 +1,12 @@
 package com.arttelit.chibisov.simplestock.dao;
 
+import com.arttelit.chibisov.simplestock.SimplestockApplication;
 import com.arttelit.chibisov.simplestock.exceptions.ForbiddenException;
 import com.arttelit.chibisov.simplestock.exceptions.NotFoundException;
 import com.arttelit.chibisov.simplestock.models.Product;
-import com.arttelit.chibisov.simplestock.models.Storage;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -15,6 +18,7 @@ import java.util.List;
 public class StockDAO {
     private JdbcTemplate jdbcTemplate;
 
+    static final Logger logger = LoggerFactory.getLogger(SimplestockApplication.class);
 
     @Autowired
     public StockDAO(JdbcTemplate jdbcTemplate) {
@@ -26,6 +30,7 @@ public class StockDAO {
         try {
             id = jdbcTemplate.queryForObject("SELECT id FROM store WHERE name=?", Integer.class, store);
         } catch (Exception e) {
+            logger.debug("Store not found");
             throw new NotFoundException();
         }
         jdbcTemplate.update("INSERT INTO storage(store_id, product, count)\n" +
@@ -47,6 +52,7 @@ public class StockDAO {
             // Delete product from store if count = 0
             jdbcTemplate.update("DELETE FROM storage WHERE storage.count = 0");
         } catch (Exception e) {
+            logger.debug("Forbidden operation");
             throw new ForbiddenException();
         }
     }

@@ -1,7 +1,6 @@
 package com.arttelit.chibisov.simplestock.dao;
 
 import com.arttelit.chibisov.simplestock.models.Product;
-import com.arttelit.chibisov.simplestock.models.Storage;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
